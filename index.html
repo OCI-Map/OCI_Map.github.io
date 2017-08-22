@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css" /><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/MarkerCluster.css" />
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+        <link rel="stylesheet" href="css/Control.OSMGeocoder.css" />
+        <link rel="stylesheet" href="css/leaflet-measure.css" />
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/multi-style-layer.js"></script>
+        <script src="js/leaflet-heat.js"></script>
+        <script src="js/leaflet-svg-shape-markers.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/OSMBuildings-Leaflet.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/leaflet-tilelayer-wmts.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/Control.OSMGeocoder.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
+        <script src="data/Hydrants0.js"></script>
+        <script src="data/Mainlines1.js"></script>
+        <script src="data/5B2.js"></script>
+        <script src="data/5C3.js"></script>
+        <script src="data/5A4.js"></script>
+        <script src="data/Endpoints5.js"></script>
+        <script>
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[47.565560674,-122.280884352],[47.5711514852,-122.267575359]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        L.control.locate().addTo(map);
+        var measureControl = new L.Control.Measure({
+            primaryLengthUnit: 'feet',
+            secondaryLengthUnit: 'miles',
+            primaryAreaUnit: 'sqfeet',
+            secondaryAreaUnit: 'sqmiles'
+        });
+        measureControl.addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        var basemap0 = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 28
+        });
+        basemap0.addTo(map);
+        function setBounds() {
+        }
+        function geoJson2heat(geojson, weight) {
+          return geojson.features.map(function(feature) {
+            return [
+              feature.geometry.coordinates[1],
+              feature.geometry.coordinates[0],
+              feature.properties[weight]
+            ];
+          });
+        }
+        function pop_Hydrants0(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">HYD_FEAKEY</th>\
+                        <td>' + (feature.properties['HYD_FEAKEY'] !== null ? Autolinker.link(String(feature.properties['HYD_FEAKEY'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">EQNUM</th>\
+                        <td>' + (feature.properties['EQNUM'] !== null ? Autolinker.link(String(feature.properties['EQNUM'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">FEA_TYPE</th>\
+                        <td>' + (feature.properties['FEA_TYPE'] !== null ? Autolinker.link(String(feature.properties['FEA_TYPE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">FEA_DESC</th>\
+                        <td>' + (feature.properties['FEA_DESC'] !== null ? Autolinker.link(String(feature.properties['FEA_DESC'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function style_Hydrants0_0() {
+            return {
+                pane: 'pane_Hydrants0',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fillOpacity: 1,
+                fillColor: 'rgba(20,68,244,1.0)',
+            }
+        }
+        map.createPane('pane_Hydrants0');
+        map.getPane('pane_Hydrants0').style.zIndex = 400;
+        map.getPane('pane_Hydrants0').style['mix-blend-mode'] = 'normal';
+        var layer_Hydrants0 = new L.geoJson(json_Hydrants0, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Hydrants0',
+            onEachFeature: pop_Hydrants0,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_Hydrants0_0(feature))
+            },
+        });
+        bounds_group.addLayer(layer_Hydrants0);
+        map.addLayer(layer_Hydrants0);
+        function pop_Mainlines1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_EQNUM_</th>\
+                        <td>' + (feature.properties['MNL_EQNUM_'] !== null ? Autolinker.link(String(feature.properties['MNL_EQNUM_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SHAPE_Leng</th>\
+                        <td>' + (feature.properties['SHAPE_Leng'] !== null ? Autolinker.link(String(feature.properties['SHAPE_Leng'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function style_Mainlines1_0() {
+            return {
+                pane: 'pane_Mainlines1',
+                opacity: 1,
+                color: 'rgba(200,60,177,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+            }
+        }
+        map.createPane('pane_Mainlines1');
+        map.getPane('pane_Mainlines1').style.zIndex = 401;
+        map.getPane('pane_Mainlines1').style['mix-blend-mode'] = 'normal';
+    var layer_Mainlines1 = new L.geoJson(json_Mainlines1, {
+        attribution: '<a href=""></a>',
+        pane: 'pane_Mainlines1',
+        onEachFeature: pop_Mainlines1,
+        style: style_Mainlines1_0,
+    });
+        bounds_group.addLayer(layer_Mainlines1);
+        map.addLayer(layer_Mainlines1);
+        function pop_5B2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_EQNUM_</th>\
+                        <td>' + (feature.properties['MNL_EQNUM_'] !== null ? Autolinker.link(String(feature.properties['MNL_EQNUM_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_USE__1</th>\
+                        <td>' + (feature.properties['MNL_USE__1'] !== null ? Autolinker.link(String(feature.properties['MNL_USE__1'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_MATE_1</th>\
+                        <td>' + (feature.properties['MNL_MATE_1'] !== null ? Autolinker.link(String(feature.properties['MNL_MATE_1'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_FCNLEN</th>\
+                        <td>' + (feature.properties['MNL_FCNLEN'] !== null ? Autolinker.link(String(feature.properties['MNL_FCNLEN'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_WIDTH_</th>\
+                        <td>' + (feature.properties['MNL_WIDTH_'] !== null ? Autolinker.link(String(feature.properties['MNL_WIDTH_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_SLOPE_</th>\
+                        <td>' + (feature.properties['MNL_SLOPE_'] !== null ? Autolinker.link(String(feature.properties['MNL_SLOPE_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_UPS_DE</th>\
+                        <td>' + (feature.properties['MNL_UPS_DE'] !== null ? Autolinker.link(String(feature.properties['MNL_UPS_DE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_DNS_DE</th>\
+                        <td>' + (feature.properties['MNL_DNS_DE'] !== null ? Autolinker.link(String(feature.properties['MNL_DNS_DE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_UPS_EL</th>\
+                        <td>' + (feature.properties['MNL_UPS_EL'] !== null ? Autolinker.link(String(feature.properties['MNL_UPS_EL'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_DNS_EL</th>\
+                        <td>' + (feature.properties['MNL_DNS_EL'] !== null ? Autolinker.link(String(feature.properties['MNL_DNS_EL'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SHAPE_Leng</th>\
+                        <td>' + (feature.properties['SHAPE_Leng'] !== null ? Autolinker.link(String(feature.properties['SHAPE_Leng'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function style_5B2_0() {
+            return {
+                pane: 'pane_5B2',
+                opacity: 1,
+                color: 'rgba(22,225,11,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+            }
+        }
+        map.createPane('pane_5B2');
+        map.getPane('pane_5B2').style.zIndex = 402;
+        map.getPane('pane_5B2').style['mix-blend-mode'] = 'normal';
+    var layer_5B2 = new L.geoJson(json_5B2, {
+        attribution: '<a href=""></a>',
+        pane: 'pane_5B2',
+        onEachFeature: pop_5B2,
+        style: style_5B2_0,
+    });
+        bounds_group.addLayer(layer_5B2);
+        map.addLayer(layer_5B2);
+        function pop_5C3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_EQNUM_</th>\
+                        <td>' + (feature.properties['MNL_EQNUM_'] !== null ? Autolinker.link(String(feature.properties['MNL_EQNUM_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_USE__1</th>\
+                        <td>' + (feature.properties['MNL_USE__1'] !== null ? Autolinker.link(String(feature.properties['MNL_USE__1'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_MATE_1</th>\
+                        <td>' + (feature.properties['MNL_MATE_1'] !== null ? Autolinker.link(String(feature.properties['MNL_MATE_1'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_FCNLEN</th>\
+                        <td>' + (feature.properties['MNL_FCNLEN'] !== null ? Autolinker.link(String(feature.properties['MNL_FCNLEN'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_WIDTH_</th>\
+                        <td>' + (feature.properties['MNL_WIDTH_'] !== null ? Autolinker.link(String(feature.properties['MNL_WIDTH_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_SLOPE_</th>\
+                        <td>' + (feature.properties['MNL_SLOPE_'] !== null ? Autolinker.link(String(feature.properties['MNL_SLOPE_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_UPS_DE</th>\
+                        <td>' + (feature.properties['MNL_UPS_DE'] !== null ? Autolinker.link(String(feature.properties['MNL_UPS_DE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_DNS_DE</th>\
+                        <td>' + (feature.properties['MNL_DNS_DE'] !== null ? Autolinker.link(String(feature.properties['MNL_DNS_DE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_UPS_EL</th>\
+                        <td>' + (feature.properties['MNL_UPS_EL'] !== null ? Autolinker.link(String(feature.properties['MNL_UPS_EL'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_DNS_EL</th>\
+                        <td>' + (feature.properties['MNL_DNS_EL'] !== null ? Autolinker.link(String(feature.properties['MNL_DNS_EL'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SHAPE_Leng</th>\
+                        <td>' + (feature.properties['SHAPE_Leng'] !== null ? Autolinker.link(String(feature.properties['SHAPE_Leng'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function style_5C3_0() {
+            return {
+                pane: 'pane_5C3',
+                opacity: 1,
+                color: 'rgba(31,207,246,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+            }
+        }
+        map.createPane('pane_5C3');
+        map.getPane('pane_5C3').style.zIndex = 403;
+        map.getPane('pane_5C3').style['mix-blend-mode'] = 'normal';
+    var layer_5C3 = new L.geoJson(json_5C3, {
+        attribution: '<a href=""></a>',
+        pane: 'pane_5C3',
+        onEachFeature: pop_5C3,
+        style: style_5C3_0,
+    });
+        bounds_group.addLayer(layer_5C3);
+        map.addLayer(layer_5C3);
+        function pop_5A4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_EQNUM_</th>\
+                        <td>' + (feature.properties['MNL_EQNUM_'] !== null ? Autolinker.link(String(feature.properties['MNL_EQNUM_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_USE__1</th>\
+                        <td>' + (feature.properties['MNL_USE__1'] !== null ? Autolinker.link(String(feature.properties['MNL_USE__1'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_MATE_1</th>\
+                        <td>' + (feature.properties['MNL_MATE_1'] !== null ? Autolinker.link(String(feature.properties['MNL_MATE_1'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_FCNLEN</th>\
+                        <td>' + (feature.properties['MNL_FCNLEN'] !== null ? Autolinker.link(String(feature.properties['MNL_FCNLEN'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_WIDTH_</th>\
+                        <td>' + (feature.properties['MNL_WIDTH_'] !== null ? Autolinker.link(String(feature.properties['MNL_WIDTH_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_SLOPE_</th>\
+                        <td>' + (feature.properties['MNL_SLOPE_'] !== null ? Autolinker.link(String(feature.properties['MNL_SLOPE_'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_UPS_DE</th>\
+                        <td>' + (feature.properties['MNL_UPS_DE'] !== null ? Autolinker.link(String(feature.properties['MNL_UPS_DE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_DNS_DE</th>\
+                        <td>' + (feature.properties['MNL_DNS_DE'] !== null ? Autolinker.link(String(feature.properties['MNL_DNS_DE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_UPS_EL</th>\
+                        <td>' + (feature.properties['MNL_UPS_EL'] !== null ? Autolinker.link(String(feature.properties['MNL_UPS_EL'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MNL_DNS_EL</th>\
+                        <td>' + (feature.properties['MNL_DNS_EL'] !== null ? Autolinker.link(String(feature.properties['MNL_DNS_EL'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SHAPE_Leng</th>\
+                        <td>' + (feature.properties['SHAPE_Leng'] !== null ? Autolinker.link(String(feature.properties['SHAPE_Leng'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function style_5A4_0() {
+            return {
+                pane: 'pane_5A4',
+                opacity: 1,
+                color: 'rgba(227,26,28,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+            }
+        }
+        map.createPane('pane_5A4');
+        map.getPane('pane_5A4').style.zIndex = 404;
+        map.getPane('pane_5A4').style['mix-blend-mode'] = 'normal';
+    var layer_5A4 = new L.geoJson(json_5A4, {
+        attribution: '<a href=""></a>',
+        pane: 'pane_5A4',
+        onEachFeature: pop_5A4,
+        style: style_5A4_0,
+    });
+        bounds_group.addLayer(layer_5A4);
+        map.addLayer(layer_5A4);
+        function pop_Endpoints5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">EQNUM_ID</th>\
+                        <td>' + (feature.properties['EQNUM_ID'] !== null ? Autolinker.link(String(feature.properties['EQNUM_ID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Type</th>\
+                        <td>' + (feature.properties['Type'] !== null ? Autolinker.link(String(feature.properties['Type'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">RIM_ELEV</th>\
+                        <td>' + (feature.properties['RIM_ELEV'] !== null ? Autolinker.link(String(feature.properties['RIM_ELEV'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IE</th>\
+                        <td>' + (feature.properties['IE'] !== null ? Autolinker.link(String(feature.properties['IE'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function style_Endpoints5_0() {
+            return {
+                pane: 'pane_Endpoints5',
+                radius: 6.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fillOpacity: 1,
+                fillColor: 'rgba(51,160,44,1.0)',
+            }
+        }
+        map.createPane('pane_Endpoints5');
+        map.getPane('pane_Endpoints5').style.zIndex = 405;
+        map.getPane('pane_Endpoints5').style['mix-blend-mode'] = 'normal';
+        var layer_Endpoints5 = new L.geoJson(json_Endpoints5, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Endpoints5',
+            onEachFeature: pop_Endpoints5,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_Endpoints5_0(feature))
+            },
+        });
+        bounds_group.addLayer(layer_Endpoints5);
+        map.addLayer(layer_Endpoints5);
+        var osmGeocoder = new L.Control.OSMGeocoder({
+            collapsed: false,
+            position: 'topright',
+            text: 'Search',
+        });
+        osmGeocoder.addTo(map);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/Endpoints5.png" /> Endpoints': layer_Endpoints5,'<img src="legend/5A4.png" /> 5A': layer_5A4,'<img src="legend/5C3.png" /> 5C': layer_5C3,'<img src="legend/5B2.png" /> 5B': layer_5B2,'<img src="legend/Mainlines1.png" /> Mainlines': layer_Mainlines1,'<img src="legend/Hydrants0.png" /> Hydrants': layer_Hydrants0,}).addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
